@@ -131,14 +131,14 @@ void Histogram::OnPaint()
 	CRgn rgn;
 	CBrush brush;
 	cacheDc.Polygon(leftTriangel.data, 3);
-	rgn.CreatePolygonRgn(leftTriangel.data, 3, ALTERNATE/*WINDING*/); //创建区域  
-	brush.CreateSolidBrush(RGB(0, 0, 0)); //创建画刷
-	cacheDc.FillRgn(&rgn, &brush); //填充区域
+	rgn.CreatePolygonRgn(leftTriangel.data, 3, ALTERNATE/*WINDING*/);
+	brush.CreateSolidBrush(RGB(0, 0, 0));
+	cacheDc.FillRgn(&rgn, &brush);
 
 	rgn.DeleteObject();
 	cacheDc.Polygon(rightTriangel.data, 3);
-	rgn.CreatePolygonRgn(rightTriangel.data, 3, ALTERNATE/*WINDING*/); //创建区域  
-	cacheDc.FillRgn(&rgn, &brush); //填充区域
+	rgn.CreatePolygonRgn(rightTriangel.data, 3, ALTERNATE/*WINDING*/);
+	cacheDc.FillRgn(&rgn, &brush);
 
 	dc.BitBlt(0, 0, rc.right, rc.bottom, &cacheDc, 0, 0, SRCCOPY);
 
