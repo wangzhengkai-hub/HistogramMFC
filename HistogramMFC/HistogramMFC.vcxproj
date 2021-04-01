@@ -185,6 +185,7 @@
   <ItemGroup>
     <ClInclude Include="framework.h" />
     <ClInclude Include="Histogram.h" />
+    <ClInclude Include="Triangle.h" />
     <ClInclude Include="HistogramMFC.h" />
     <ClInclude Include="HistogramMFCDlg.h" />
     <ClInclude Include="pch.h" />
@@ -193,6 +194,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Histogram.cpp" />
+    <ClCompile Include="Triangle.cpp" />
     <ClCompile Include="HistogramMFC.cpp" />
     <ClCompile Include="HistogramMFCDlg.cpp" />
     <ClCompile Include="pch.cpp">

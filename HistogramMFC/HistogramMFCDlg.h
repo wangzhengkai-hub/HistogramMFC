@@ -30,12 +30,10 @@ protected:
 	// 生成的消息映射函数
 	virtual BOOL OnInitDialog();
 	afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
-	afx_msg void OnPaint();
 	afx_msg HCURSOR OnQueryDragIcon();
+	afx_msg void OnPaint();
 	DECLARE_MESSAGE_MAP()
 
-
 private:
-	Triangle triangel;
-
+	Histogram* pHisto;
 };

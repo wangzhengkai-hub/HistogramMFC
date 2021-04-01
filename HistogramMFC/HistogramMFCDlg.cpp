@@ -45,11 +45,7 @@ void CAboutDlg::DoDataExchange(CDataExchange* pDX)
 BEGIN_MESSAGE_MAP(CAboutDlg, CDialogEx)
 END_MESSAGE_MAP()
 
-
 // CHistogramMFCDlg 对话框
-
-
-
 CHistogramMFCDlg::CHistogramMFCDlg(CWnd* pParent /*=nullptr*/)
 	: CDialogEx(IDD_HISTOGRAMMFC_DIALOG, pParent)
 {
@@ -96,10 +92,18 @@ BOOL CHistogramMFCDlg::OnInitDialog()
 
 	// 设置此对话框的图标。  当应用程序主窗口不是对话框时，框架将自动
 	//  执行此操作
-	SetIcon(m_hIcon, TRUE);			// 设置大图标
 	SetIcon(m_hIcon, FALSE);		// 设置小图标
 
 	// TODO: 在此添加额外的初始化代码
+	CPaintDC dc(this);
+	SetBkColor(dc, GetSysColor(COLOR_WINDOW));
+
+	pHisto = new Histogram;
+	pHisto->Create(IDD_FORMVIEW, this);
+	CRect rect;
+	GetClientRect(&rect);
+	pHisto->MoveWindow(rect);
+	pHisto->ShowWindow(SW_SHOW);
 
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
@@ -123,41 +127,8 @@ void CHistogramMFCDlg::OnSysCommand(UINT nID, LPARAM lParam)
 
 void CHistogramMFCDlg::OnPaint()
 {
-	if (IsIconic())
-	{
-		CPaintDC dc(this); // 用于绘制的设备上下文
-
-		SendMessage(WM_ICONERASEBKGND, reinterpret_cast<WPARAM>(dc.GetSafeHdc()), 0);
-
-		// 使图标在工作区矩形中居中
-		int cxIcon = GetSystemMetrics(SM_CXICON);
-		int cyIcon = GetSystemMetrics(SM_CYICON);
-		CRect rect;
-		GetClientRect(&rect);
-		int x = (rect.Width() - cxIcon + 1) / 2;
-		int y = (rect.Height() - cyIcon + 1) / 2;
-
-		// 绘制图标
-		dc.DrawIcon(x, y, m_hIcon);
-	}
-	else
-	{
-		CPaintDC dc(this);
-
-		CRgn rgn;
-		CBrush brush;
-
-		dc.Polygon(triangel.data, 3);
-		rgn.CreatePolygonRgn(triangel.data, 3, ALTERNATE/*WINDING*/); //创建区域  
-		brush.CreateSolidBrush(RGB(0, 0, 0)); //创建画刷
-		dc.FillRgn(&rgn, &brush); //填充区域
-
-		brush.DeleteObject();
-		rgn.DeleteObject();
-
-
-		//CDialogEx::OnPaint();
-	}
+	CPaintDC dc(this);
+	CDialogEx::OnPaint();
 }
 
 //当用户拖动最小化窗口时系统调用此函数取得光标
@@ -166,4 +137,3 @@ HCURSOR CHistogramMFCDlg::OnQueryDragIcon()
 {
 	return static_cast<HCURSOR>(m_hIcon);
 }
-
