@@ -7,13 +7,15 @@
 #include "HistogramMFC.h"
 #include "Histogram.h"
 #include "afxdialogex.h"
+#define random(a,b) (rand()%(b-a)+a)
 
 
+using namespace std;
 Histo::Histo(CRect _rect)
 {
 	positionRt = _rect;
 	double stepX = this->positionRt.Width() / 255.0 * 5.0;
-	histoValue.fill(10);
+	//histoValue.fill(10);
 	for (size_t i = 0; i < 256; i = i+5)
 		scaleValueX[i] = scaleValueX[i] * stepX;
 }
@@ -157,7 +159,14 @@ BOOL Histogram::OnInitDialog()
 	_rect.bottom -= 50;
 	_rect.left += 50;
 	_rect.right -= 50;
-	histo.histoValue.fill(50);
+	//histo.histoValue.fill(50);
+	for (size_t i = 0; i < histo.histoValue.size(); i++)
+	{
+		int a = random(1, 60);
+		histo.histoValue[i] = a;
+	}
+	//for (int x : histo.histoValue)
+	//	x = random(1, 60);
 	histo.positionRt = _rect;
 
 	lowRect.left = _rect.left - 7;
@@ -256,7 +265,7 @@ bool Histo::SetPara()
 }
 
 
-int Histogram::PaintGrid(CDC* pDC,Histo _histo)
+bool Histogram::PaintGrid(CDC* pDC,Histo _histo)
 {
 	CPen graySolidPen(PS_SOLID, 1, RGB(192, 192, 192));
 	CPen grayDothPen(PS_DOT, 1, RGB(192, 192, 192));
@@ -324,7 +333,7 @@ int Histogram::PaintGrid(CDC* pDC,Histo _histo)
 
 bool Histogram::PaintHistoValue(CDC* pDC, Histo _histo)
 {
-	CPen blueSolidPen(PS_SOLID, 1, RGB(0, 0, 255));
+	CPen blueSolidPen(PS_SOLID, (int)std::ceil(_histo.stepX), RGB(0, 0, 255));
 	pDC->SelectObject(blueSolidPen);
 	for (size_t i = 0; i < _histo.histoValue.size(); i++)
 	{

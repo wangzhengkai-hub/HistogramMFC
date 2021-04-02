@@ -1,5 +1,4 @@
 ﻿#pragma once
-#pragma warning(disable: 26451)
 #include <iostream>
 #include <array>
 #include <vector>
@@ -36,7 +35,7 @@ public:
 	Histogram(CRect _rect, CWnd* pParent = nullptr);
 	virtual ~Histogram();
 
-// 对话框数据
+	// 对话框数据
 #ifdef AFX_DESIGN_TIME
 	enum { IDD = IDD_FORMVIEW };
 #endif
@@ -55,9 +54,6 @@ public:
 
 private:
 	CRect    rect;
-	//Triangle leftTriangel;
-	//Triangle rightTriangel;
-
 	CRect    lowRect;
 	CRect    upRect;
 	CPoint   posStart;
@@ -66,8 +62,8 @@ private:
 	Histo    histo;
 public:
 	bool PaintHisto(CDC* pDC, Histo _histo);
-	//bool PaintTriangle(CDC* pDC, const Triangle& _triangle, COLORREF color);
-	int  PaintGrid(CDC* pDC,Histo _histo);
+	bool PaintGrid(CDC* pDC, Histo _histo);
 	bool PaintHistoValue(CDC* pDC, Histo _histo);
 	bool PaintTRect(CDC* pDC);
+	//bool PaintTriangle(CDC* pDC, const Triangle& _triangle, COLORREF color);
 };
