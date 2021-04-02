@@ -1,7 +1,31 @@
 ﻿#pragma once
-
+#pragma warning(disable: 26451)
+#include <iostream>
+#include <array>
+#include <vector>
 #include "Triangle.h"
 // Histogram 对话框
+
+class Histo
+{
+public:
+	Histo() {};
+	Histo(CRect _rect);
+	~Histo();
+
+public:
+	CRect positionRt;
+
+	double showRange = 0.56;
+	std::array<int, 256> histoValue;
+	std::vector<int> scaleValueX;
+	std::vector<int> scaleValueY;
+
+	double stepX;
+	double stepY;
+
+	bool SetPara();
+};
 
 class Histogram : public CDialogEx
 {
@@ -9,6 +33,7 @@ class Histogram : public CDialogEx
 
 public:
 	Histogram(CWnd* pParent = nullptr);   // 标准构造函数
+	Histogram(CRect _rect, CWnd* pParent = nullptr);
 	virtual ~Histogram();
 
 // 对话框数据
@@ -26,14 +51,23 @@ public:
 	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
 	afx_msg void OnLButtonUp(UINT nFlags, CPoint point);
 	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
+	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
 
 private:
-	Triangle leftTriangel;
-	Triangle rightTriangel;
+	CRect    rect;
+	//Triangle leftTriangel;
+	//Triangle rightTriangel;
+
+	CRect    lowRect;
+	CRect    upRect;
 	CPoint   posStart;
 	bool     isMoveTriangle = false;
 	int      triangleFlag;
-	
+	Histo    histo;
 public:
-	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
+	bool PaintHisto(CDC* pDC, Histo _histo);
+	//bool PaintTriangle(CDC* pDC, const Triangle& _triangle, COLORREF color);
+	int  PaintGrid(CDC* pDC,Histo _histo);
+	bool PaintHistoValue(CDC* pDC, Histo _histo);
+	bool PaintTRect(CDC* pDC);
 };

@@ -52,6 +52,11 @@ CHistogramMFCDlg::CHistogramMFCDlg(CWnd* pParent /*=nullptr*/)
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
 
+CHistogramMFCDlg::~CHistogramMFCDlg()
+{
+	delete pHisto;
+}
+
 void CHistogramMFCDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
@@ -98,11 +103,12 @@ BOOL CHistogramMFCDlg::OnInitDialog()
 	CPaintDC dc(this);
 	SetBkColor(dc, GetSysColor(COLOR_WINDOW));
 
-	pHisto = new Histogram;
-	pHisto->Create(IDD_FORMVIEW, this);
 	CRect rect;
 	GetClientRect(&rect);
-	pHisto->MoveWindow(rect);
+	pHisto = new Histogram(rect);
+	pHisto->Create(IDD_FORMVIEW, this);
+	
+	//pHisto->MoveWindow(rect);
 	pHisto->ShowWindow(SW_SHOW);
 
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
