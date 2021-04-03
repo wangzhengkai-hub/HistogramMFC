@@ -54,7 +54,7 @@ CHistogramMFCDlg::CHistogramMFCDlg(CWnd* pParent /*=nullptr*/)
 
 CHistogramMFCDlg::~CHistogramMFCDlg()
 {
-	delete pHisto;
+	delete pHistoCtrl;
 }
 
 void CHistogramMFCDlg::DoDataExchange(CDataExchange* pDX)
@@ -105,11 +105,11 @@ BOOL CHistogramMFCDlg::OnInitDialog()
 
 	CRect rect;
 	GetClientRect(&rect);
-	pHisto = new Histogram(rect);
-	pHisto->Create(IDD_FORMVIEW, this);
+	pHistoCtrl = new HistogramCtrl(rect);
+	pHistoCtrl->Create(IDD_FORMVIEW, this);
 	
-	//pHisto->MoveWindow(rect);
-	pHisto->ShowWindow(SW_SHOW);
+	//pHistoCtrl->MoveWindow(rect);
+	pHistoCtrl->ShowWindow(SW_SHOW);
 
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }

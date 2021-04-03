@@ -1,69 +1,20 @@
-ï»¿#pragma once
-#include <iostream>
+#pragma once
 #include <array>
-#include <vector>
-#include "Triangle.h"
-// Histogram å¯¹è¯æ¡†
 
-class Histo
+class Histograme
 {
 public:
-	Histo() {};
-	Histo(CRect _rect);
-	~Histo();
+	Histograme() {};
+	Histograme(CRect _rect, std::array<int, 256> _histoValue);
+	~Histograme();
 
 public:
-	CRect positionRt;
+	std::array<int, 256> histoValue{};
+	CRect  posRect = CRect();
+	double stepX = 0;                        // XÖáÃ¿¸öµ¥Î»µÄÊıÖµËùÕ¼µÄÏñËØÊı
+	double stepY = 0;                        // YÖáÃ¿¸öµ¥Î»µÄÊıÖµËùÕ¼µÄÏñËØÊı
 
-	double showRange = 0.56;
-	std::array<int, 256> histoValue;
-	std::vector<int> scaleValueX;
-	std::vector<int> scaleValueY;
-
-	double stepX;
-	double stepY;
-
-	bool SetPara();
+public:
+	bool SetPara(CRect _rect, std::array<int, 256> _histoValue);                      // Ê¹ÓÃºÍÓĞ²Î¹¹Ôìº¯Êıºó¿É²»Ö´ĞĞ´Ë²Ù×÷
 };
 
-class Histogram : public CDialogEx
-{
-	DECLARE_DYNAMIC(Histogram)
-
-public:
-	Histogram(CWnd* pParent = nullptr);   // æ ‡å‡†æ„é€ å‡½æ•°
-	Histogram(CRect _rect, CWnd* pParent = nullptr);
-	virtual ~Histogram();
-
-	// å¯¹è¯æ¡†æ•°æ®
-#ifdef AFX_DESIGN_TIME
-	enum { IDD = IDD_FORMVIEW };
-#endif
-
-protected:
-	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV æ”¯æŒ
-
-	DECLARE_MESSAGE_MAP()
-public:
-	virtual BOOL OnInitDialog();
-	afx_msg void OnPaint();
-	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
-	afx_msg void OnLButtonUp(UINT nFlags, CPoint point);
-	afx_msg void OnMouseMove(UINT nFlags, CPoint point);
-	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
-
-private:
-	CRect    rect;
-	CRect    lowRect;
-	CRect    upRect;
-	CPoint   posStart;
-	bool     isMoveTriangle = false;
-	int      triangleFlag;
-	Histo    histo;
-public:
-	bool PaintHisto(CDC* pDC, Histo _histo);
-	bool PaintGrid(CDC* pDC, Histo _histo);
-	bool PaintHistoValue(CDC* pDC, Histo _histo);
-	bool PaintTRect(CDC* pDC);
-	//bool PaintTriangle(CDC* pDC, const Triangle& _triangle, COLORREF color);
-};

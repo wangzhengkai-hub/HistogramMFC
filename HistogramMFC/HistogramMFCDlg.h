@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "Histogram.h"
+#include "HistogramCtrl.h"
 
 
 // CHistogramMFCDlg 对话框
@@ -36,5 +36,5 @@ protected:
 	DECLARE_MESSAGE_MAP()
 
 private:
-	Histogram* pHisto;
+	HistogramCtrl* pHistoCtrl;
 };

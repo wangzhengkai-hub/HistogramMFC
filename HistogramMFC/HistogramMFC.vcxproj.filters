@@ -36,7 +36,13 @@
     <ClInclude Include="Triangle.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="HistogramCtrl.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
     <ClInclude Include="Histogram.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="DoubleSlider.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
@@ -53,7 +59,13 @@
     <ClCompile Include="Triangle.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="HistogramCtrl.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
     <ClCompile Include="Histogram.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="DoubleSlider.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

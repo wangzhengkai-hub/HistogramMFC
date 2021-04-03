@@ -183,8 +183,10 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="DoubleSlider.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Histogram.h" />
+    <ClInclude Include="HistogramCtrl.h" />
     <ClInclude Include="Triangle.h" />
     <ClInclude Include="HistogramMFC.h" />
     <ClInclude Include="HistogramMFCDlg.h" />
@@ -193,7 +195,9 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="DoubleSlider.cpp" />
     <ClCompile Include="Histogram.cpp" />
+    <ClCompile Include="HistogramCtrl.cpp" />
     <ClCompile Include="Triangle.cpp" />
     <ClCompile Include="HistogramMFC.cpp" />
     <ClCompile Include="HistogramMFCDlg.cpp" />
