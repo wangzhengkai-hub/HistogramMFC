@@ -33,17 +33,15 @@ public:
 
 private:
 	CRect    rect;
-	//CRect    lowRect;
-	//CRect    upRect;
-	CPoint   posStart;
+	//CPoint   posStart;
 	bool     isMoveSlider = false;
 	int      sliderFlag;
 	Histograme*   pHisto;
 	DoubleSlider* pDouSlider;
 public:
-	bool PaintHisto(CDC* pDC, Histograme _histo);
+	bool PaintHisto(CDC* pDC, Histograme _histo, int leftValue, int rightValue);
 	bool PaintGrid(CDC* pDC, Histograme _histo);
-	bool PaintHistoValue(CDC* pDC, Histograme _histo);
+	bool PaintHistoValue(CDC* pDC, Histograme _histo, int leftValue, int rightValue);
 	bool PaintDoubleSlider(CDC* pDC);
 	//bool PaintTriangle(CDC* pDC, const Triangle& _triangle, COLORREF color);
 };

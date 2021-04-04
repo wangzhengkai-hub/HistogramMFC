@@ -65,14 +65,12 @@ void HistogramCtrl::OnLButtonDown(UINT nFlags, CPoint point)
 	if (pDouSlider->leftSlider.PtInRect(point))
 	{
 		isMoveSlider = true;
-		posStart = point;
 		sliderFlag = 0;
 	}
 
 	if (pDouSlider->rightSlider.PtInRect(point))
 	{
 		isMoveSlider = true;
-		posStart = point;
 		sliderFlag = 1;
 	}
 
@@ -96,9 +94,7 @@ void HistogramCtrl::OnLButtonUp(UINT nFlags, CPoint point)
 void HistogramCtrl::OnMouseMove(UINT nFlags, CPoint point)
 {
 	// TODO: 在此添加消息处理程序代码和/或调用默认值
-	if (pDouSlider->leftSlider.PtInRect(point)|| pDouSlider->rightSlider.PtInRect(point))
-		//HCURSOR cursor = LoadCursorA(NULL, IDC_SIZEWE);
-		//SetCursor(cursor);
+	if (pDouSlider->leftSlider.PtInRect(point) || pDouSlider->rightSlider.PtInRect(point))
 		SetClassLongPtr(this->GetSafeHwnd(), -12, (LONG)LoadCursorA(NULL, IDC_SIZEWE));
 	else
 		SetClassLongPtr(this->GetSafeHwnd(), -12, (LONG)LoadCursorA(NULL, IDC_ARROW));
@@ -106,24 +102,20 @@ void HistogramCtrl::OnMouseMove(UINT nFlags, CPoint point)
 
 	if (isMoveSlider)
 	{
-		int transX = point.x - posStart.x;
-		int transY = point.y - posStart.y;
-		posStart = point;
 		switch (sliderFlag)
 		{
 		case 0:
-			pDouSlider->SetLeftSliderPos(transX);
-			//pDouSlider->leftSlider.OffsetRect(transX, 0);
+			pDouSlider->SetLeftSliderPos(point.x);
 			break;
 
 		case 1:
-			//pDouSlider->rightSlider.OffsetRect(transX, 0);
-			pDouSlider->SetRightSliderPos(transX);
+			pDouSlider->SetRightSliderPos(point.x);
 			break;
 
 		default:
 			break;
 		}
+
 		Invalidate(true);
 	}
 
@@ -134,17 +126,15 @@ void HistogramCtrl::OnMouseMove(UINT nFlags, CPoint point)
 BOOL HistogramCtrl::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
-	this->MoveWindow(rect);
 	// TODO:  在此添加额外的初始化
-	//leftTriangel.SetTrianglePos(CPoint(60, 200));
-	//rightTriangel.SetTrianglePos(CPoint(300, 200));
+
+	this->MoveWindow(rect);
 	CRect _rect;
 	this->GetClientRect(_rect);
 	_rect.top += 50;
 	_rect.bottom -= 50;
 	_rect.left += 50;
 	_rect.right -= 50;
-	//histo.histoValue.fill(50);
 
 	std::array<int, 256> histoValue{};
 	for (size_t i = 0; i < histoValue.size(); i++)
@@ -153,19 +143,7 @@ BOOL HistogramCtrl::OnInitDialog()
 		histoValue[i] = a;
 	}
 	pHisto = new Histograme(_rect, histoValue);
-
 	pDouSlider = new DoubleSlider(_rect);
-
-
-	//lowRect.left = _rect.left - 7;
-	//lowRect.right = _rect.left + 8;
-	//lowRect.top = _rect.top;
-	//lowRect.bottom = _rect.bottom;
-
-	//upRect.left = _rect.right - 8;
-	//upRect.right = _rect.right + 7;
-	//upRect.top = _rect.top;
-	//upRect.bottom = _rect.bottom;
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 				  // 异常: OCX 属性页应返回 FALSE
@@ -186,7 +164,7 @@ void HistogramCtrl::OnPaint()
 	CBitmap* pOldBit = cacheDc.SelectObject(&cacheCBitmap);
 	cacheDc.FillSolidRect(rc, GetSysColor(COLOR_WINDOW));
 
-	PaintHisto(&cacheDc, *pHisto);
+	PaintHisto(&cacheDc, *pHisto, pDouSlider->leftSlider.CenterPoint().x, pDouSlider->rightSlider.CenterPoint().x);
 	PaintDoubleSlider(&cacheDc);
 
 	dc.BitBlt(0, 0, rc.right, rc.bottom, &cacheDc, 0, 0, SRCCOPY);
@@ -205,19 +183,24 @@ BOOL HistogramCtrl::OnEraseBkgnd(CDC* pDC)
 }
 
 
-bool HistogramCtrl::PaintHisto(CDC* pDC, Histograme _histo)
+//bool HistogramCtrl::PaintHisto(CDC* pDC, Histograme _histo, int leftValue, int rightValue);
+//{
+//
+//}
+
+
+bool HistogramCtrl::PaintHisto(CDC* pDC, Histograme _histo, int leftValue, int rightValue)
 {
 	CPen solidPen(PS_SOLID, 1, RGB(192, 192, 192));
 	CPen dothPen(PS_DOT, 1, RGB(192, 192, 192));
 	pDC->SelectObject(solidPen);
 	pDC->Rectangle(_histo.posRect);
-	PaintGrid(pDC,_histo);
-	PaintHistoValue(pDC, _histo);
+	PaintGrid(pDC, _histo);
+	PaintHistoValue(pDC, _histo, leftValue, rightValue);
 	return false;
 }
 
-
-bool HistogramCtrl::PaintGrid(CDC* pDC,Histograme _histo)
+bool HistogramCtrl::PaintGrid(CDC* pDC, Histograme _histo)
 {
 
 	size_t valueSize = _histo.histoValue.size();
@@ -225,13 +208,11 @@ bool HistogramCtrl::PaintGrid(CDC* pDC,Histograme _histo)
 	std::vector<int> scaleValueX;
 	std::vector<int> scaleValueY;
 
-	//stepX = posRect.Width() / 256.0;
 	for (size_t i = 0; i < 256; i = i + 5)
 		scaleValueX.push_back(int(i * _histo.stepX));
 
 	int maxY = *(std::min_element(std::begin(_histo.histoValue), std::end(_histo.histoValue)));
 	int maxHeight = (int)std::ceil((maxY * 100) / 10);
-	//_histo.stepY = _histo.posRect.Height() / (maxHeight * 10);
 
 	int scaleStep = 2;
 	if (maxHeight > 3)
@@ -239,8 +220,6 @@ bool HistogramCtrl::PaintGrid(CDC* pDC,Histograme _histo)
 
 	for (size_t i = 0; i <= maxHeight * 10; i = i + scaleStep)
 		scaleValueY.push_back(int(i * _histo.stepY));
-
-
 
 	CPen graySolidPen(PS_SOLID, 1, RGB(192, 192, 192));
 	CPen grayDothPen(PS_DOT, 1, RGB(192, 192, 192));
@@ -252,6 +231,7 @@ bool HistogramCtrl::PaintGrid(CDC* pDC,Histograme _histo)
 	font.CreateFontA(13, 0, 0, 0, FW_NORMAL, FALSE, FALSE, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS,
 		DEFAULT_QUALITY, DEFAULT_PITCH | FF_SWISS, _T("宋体"));
 
+	// 画网格和刻度标记
 	for (size_t i = 0; i < scaleValueX.size(); i++)
 	{
 		if (i % 5 == 0)
@@ -271,7 +251,7 @@ bool HistogramCtrl::PaintGrid(CDC* pDC,Histograme _histo)
 			CString str;
 			str.Format("%d", (int)std::round(scaleValueX[i] / _histo.stepX));
 			pDC->SelectObject(font);
-			pDC->TextOutA(scaleValueX[i]-13 + _histo.posRect.left, _histo.posRect.bottom + 15, str);
+			pDC->TextOutA(scaleValueX[i] - 13 + _histo.posRect.left, _histo.posRect.bottom + 15, str);
 		}
 	}
 
@@ -290,29 +270,33 @@ bool HistogramCtrl::PaintGrid(CDC* pDC,Histograme _histo)
 			pDC->SelectObject(blackThickPen);
 		else
 			pDC->SelectObject(graySolidPen);
-		pDC->MoveTo(_histo.posRect.left-10, _histo.posRect.bottom - scaleValueY[i]);
-		pDC->LineTo(_histo.posRect.left-5, _histo.posRect.bottom - scaleValueY[i]);
+		pDC->MoveTo(_histo.posRect.left - 10, _histo.posRect.bottom - scaleValueY[i]);
+		pDC->LineTo(_histo.posRect.left - 5, _histo.posRect.bottom - scaleValueY[i]);
 
 		if (i % 5 == 0)
 		{
 			pDC->SelectObject(font);
 			CString str;
-			str.Format("%d", (int)std::round(scaleValueY[i]/ _histo.stepY));
-			pDC->TextOutA(_histo.posRect.left - 30, _histo.posRect.bottom - scaleValueY[i]-7, str);
+			str.Format("%d", (int)std::round(scaleValueY[i] / _histo.stepY));
+			pDC->TextOutA(_histo.posRect.left - 30, _histo.posRect.bottom - scaleValueY[i] - 7, str);
 		}
 
 	}
 	return 0;
 }
 
-
-bool HistogramCtrl::PaintHistoValue(CDC* pDC, Histograme _histo)
+bool HistogramCtrl::PaintHistoValue(CDC* pDC, Histograme _histo, int leftValue, int rightValue)
 {
 	CPen blueSolidPen(PS_SOLID, (int)std::ceil(_histo.stepX), RGB(0, 0, 255));
-	pDC->SelectObject(blueSolidPen);
+	CPen graySolidPen(PS_SOLID, (int)std::ceil(_histo.stepX), RGB(192, 192, 192));
 	for (size_t i = 0; i < _histo.histoValue.size(); i++)
 	{
-		if (_histo.histoValue[i]>0)
+		if (i * _histo.stepX + _histo.posRect.left < leftValue || i * _histo.stepX + _histo.posRect.left >rightValue)
+			pDC->SelectObject(graySolidPen);
+		else
+			pDC->SelectObject(blueSolidPen);
+
+		if (_histo.histoValue[i] > 0)
 		{
 			pDC->MoveTo(int(i * _histo.stepX + _histo.posRect.left), _histo.posRect.bottom);
 			pDC->LineTo(int(i * _histo.stepX + _histo.posRect.left), int(_histo.posRect.bottom - _histo.histoValue[i] * _histo.stepY));

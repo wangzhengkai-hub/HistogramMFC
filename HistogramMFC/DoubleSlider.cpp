@@ -11,8 +11,8 @@ bool Slider::SetPosition(CRect _pos)
 DoubleSlider::DoubleSlider(CRect _pos)
 {
 	pos = _pos;
-	leftSlider = CRect(pos.left - 4, pos.top, pos.left + 5, pos.bottom);
-	rightSlider = CRect(pos.right - 5, pos.top, pos.right + 4, pos.bottom);
+	leftSlider = CRect(pos.left - 5, pos.top, pos.left + 5, pos.bottom);
+	rightSlider = CRect(pos.right - 5, pos.top, pos.right + 5, pos.bottom);
 }
 
 void DoubleSlider::SetDoubleSliderPos(int leftOffsetX, int rightOffsetX)
@@ -29,23 +29,24 @@ void DoubleSlider::SetDoubleSliderPos(int leftOffsetX, int rightOffsetX)
 	}
 }
 
-void DoubleSlider::SetLeftSliderPos(int offsetX)
+void DoubleSlider::SetLeftSliderPos(int leftPos)
 {
-	int leftPos = offsetX + leftSlider.CenterPoint().x;
+
+	//int leftPos = offsetX + leftSlider.CenterPoint().x;
 	if (leftPos > pos.left &&
 		leftPos <= rightSlider.CenterPoint().x)
 	{
-		leftSlider.OffsetRect(offsetX,0);
+		leftSlider.OffsetRect(leftPos-leftSlider.CenterPoint().x,0);
 	}
 }
 
-void DoubleSlider::SetRightSliderPos(int offsetX)
+void DoubleSlider::SetRightSliderPos(int rightPos)
 {
-	int rightPos = offsetX + rightSlider.CenterPoint().x;
+	//int rightPos = offsetX + rightSlider.CenterPoint().x;
 	if (rightPos < pos.right &&
 		rightPos >= leftSlider.CenterPoint().x)
 	{
-		rightSlider.OffsetRect(offsetX, 0);
+		rightSlider.OffsetRect(rightPos- rightSlider.CenterPoint().x, 0);
 	}
 }
 
